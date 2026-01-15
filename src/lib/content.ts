@@ -1,5 +1,6 @@
 import matter from 'gray-matter';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import type { Article, GlossaryTerm, SearchResult } from '../types/content';
 
 // Import all markdown files at build time using Vite's glob import
@@ -15,6 +16,22 @@ const glossaryFiles = import.meta.glob('/content/glossary/*.md', {
   eager: true,
 });
 
+// Sanitize HTML to prevent XSS
+function sanitizeHtml(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'p', 'br', 'hr',
+      'ul', 'ol', 'li',
+      'strong', 'em', 'b', 'i', 'u',
+      'a', 'code', 'pre', 'blockquote',
+      'table', 'thead', 'tbody', 'tr', 'th', 'td',
+      'img', 'figure', 'figcaption',
+    ],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel'],
+  });
+}
+
 function parseArticle(content: string, filename: string): Article {
   const { data, content: body } = matter(content);
   const slug = data.slug || filename.replace(/\.md$/, '');
@@ -23,6 +40,10 @@ function parseArticle(content: string, filename: string): Article {
   const wordCount = body.split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
 
+  // Parse and sanitize the HTML
+  const parsedHtml = marked(body) as string;
+  const sanitizedHtml = sanitizeHtml(parsedHtml);
+
   return {
     slug,
     title: data.title || '',
@@ -30,7 +51,8 @@ function parseArticle(content: string, filename: string): Article {
     date: data.date || '',
     category: data.category || 'verstaan',
     tags: data.tags || [],
-    content: marked(body) as string,
+    content: sanitizedHtml,
+    rawContent: body,
     readingTime,
   };
 }
@@ -39,19 +61,30 @@ function parseTerm(content: string, filename: string): GlossaryTerm {
   const { data, content: body } = matter(content);
   const slug = data.slug || filename.replace(/\.md$/, '');
 
+  // Parse and sanitize the HTML
+  const parsedHtml = marked(body) as string;
+  const sanitizedHtml = sanitizeHtml(parsedHtml);
+
   return {
     slug,
     term: data.term || '',
     shortDefinition: data.shortDefinition || '',
     related: data.related || [],
     tags: data.tags || [],
-    content: marked(body) as string,
+    content: sanitizedHtml,
+    rawContent: body,
   };
 }
 
 // Cache parsed content
 let articlesCache: Article[] | null = null;
 let termsCache: GlossaryTerm[] | null = null;
+
+// Helper to safely parse dates
+function safeGetTime(dateStr: string): number {
+  const time = Date.parse(dateStr);
+  return isNaN(time) ? 0 : time;
+}
 
 export function getAllArticles(): Article[] {
   if (articlesCache) return articlesCache;
@@ -63,8 +96,8 @@ export function getAllArticles(): Article[] {
     articles.push(parseArticle(content as string, filename));
   }
 
-  // Sort by date, newest first
-  articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Sort by date, newest first (with safe date parsing)
+  articles.sort((a, b) => safeGetTime(b.date) - safeGetTime(a.date));
 
   articlesCache = articles;
   return articles;
@@ -138,7 +171,7 @@ export function getRelatedTerms(term: GlossaryTerm): GlossaryTerm[] {
     .filter((t): t is GlossaryTerm => t !== undefined);
 }
 
-// Search functionality
+// Search functionality - uses rawContent instead of HTML to prevent false positives
 export function search(query: string): SearchResult[] {
   if (!query.trim()) return [];
 
@@ -149,7 +182,7 @@ export function search(query: string): SearchResult[] {
   getAllArticles().forEach((article) => {
     const titleMatch = article.title.toLowerCase().includes(normalizedQuery);
     const descMatch = article.description.toLowerCase().includes(normalizedQuery);
-    const contentMatch = article.content.toLowerCase().includes(normalizedQuery);
+    const contentMatch = article.rawContent.toLowerCase().includes(normalizedQuery);
     const tagMatch = article.tags.some((tag) =>
       tag.toLowerCase().includes(normalizedQuery)
     );
@@ -169,7 +202,7 @@ export function search(query: string): SearchResult[] {
   getAllTerms().forEach((term) => {
     const termMatch = term.term.toLowerCase().includes(normalizedQuery);
     const defMatch = term.shortDefinition.toLowerCase().includes(normalizedQuery);
-    const contentMatch = term.content.toLowerCase().includes(normalizedQuery);
+    const contentMatch = term.rawContent.toLowerCase().includes(normalizedQuery);
 
     if (termMatch || defMatch || contentMatch) {
       results.push({

@@ -24,7 +24,8 @@ export function GlossaryPage() {
     const groups: Record<string, typeof filteredTerms> = {};
 
     filteredTerms.forEach((term) => {
-      const firstLetter = term.term[0].toUpperCase();
+      // Safely handle empty or undefined term names
+      const firstLetter = (term.term?.[0] ?? '#').toUpperCase();
       if (!groups[firstLetter]) {
         groups[firstLetter] = [];
       }

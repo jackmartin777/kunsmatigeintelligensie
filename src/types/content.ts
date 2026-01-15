@@ -6,6 +6,7 @@ export interface Article {
   category: 'verstaan' | 'gebruik' | 'nuus' | 'etiek';
   tags: string[];
   content: string;
+  rawContent: string;
   readingTime?: number;
 }
 
@@ -16,6 +17,7 @@ export interface GlossaryTerm {
   related: string[];
   tags: string[];
   content: string;
+  rawContent: string;
 }
 
 export interface Category {

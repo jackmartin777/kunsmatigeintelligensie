@@ -15,6 +15,14 @@ const glossaryFiles = import.meta.glob('/content/glossary/*.md', {
   eager: true,
 });
 
+/**
+ * Parses a markdown article file and extracts its metadata and content.
+ * Calculates reading time based on word count (approximately 200 words per minute).
+ * 
+ * @param content - Raw markdown content string from the article file
+ * @param filename - Name of the markdown file (used as fallback for slug)
+ * @returns Parsed Article object with all metadata and HTML content
+ */
 function parseArticle(content: string, filename: string): Article {
   const { data, content: body } = matter(content);
   const slug = data.slug || filename.replace(/\.md$/, '');
@@ -35,6 +43,13 @@ function parseArticle(content: string, filename: string): Article {
   };
 }
 
+/**
+ * Parses a markdown glossary term file and extracts its metadata and content.
+ * 
+ * @param content - Raw markdown content string from the glossary file
+ * @param filename - Name of the markdown file (used as fallback for slug)
+ * @returns Parsed GlossaryTerm object with all metadata and HTML content
+ */
 function parseTerm(content: string, filename: string): GlossaryTerm {
   const { data, content: body } = matter(content);
   const slug = data.slug || filename.replace(/\.md$/, '');
@@ -53,6 +68,13 @@ function parseTerm(content: string, filename: string): GlossaryTerm {
 let articlesCache: Article[] | null = null;
 let termsCache: GlossaryTerm[] | null = null;
 
+/**
+ * Retrieves all articles from the content directory.
+ * Results are cached after the first call for performance.
+ * Articles are sorted by date, with the newest articles first.
+ * 
+ * @returns Array of all Article objects sorted by date (newest first)
+ */
 export function getAllArticles(): Article[] {
   if (articlesCache) return articlesCache;
 
@@ -70,18 +92,43 @@ export function getAllArticles(): Article[] {
   return articles;
 }
 
+/**
+ * Finds and returns a specific article by its slug identifier.
+ * 
+ * @param slug - The unique slug identifier for the article
+ * @returns The Article object if found, undefined otherwise
+ */
 export function getArticleBySlug(slug: string): Article | undefined {
   return getAllArticles().find((article) => article.slug === slug);
 }
 
+/**
+ * Retrieves all articles belonging to a specific category.
+ * 
+ * @param category - The category identifier (e.g., 'verstaan', 'gebruik', 'nuus', 'etiek')
+ * @returns Array of Article objects in the specified category
+ */
 export function getArticlesByCategory(category: string): Article[] {
   return getAllArticles().filter((article) => article.category === category);
 }
 
+/**
+ * Retrieves all articles that have been tagged with a specific tag.
+ * 
+ * @param tag - The tag to filter articles by
+ * @returns Array of Article objects that contain the specified tag
+ */
 export function getArticlesByTag(tag: string): Article[] {
   return getAllArticles().filter((article) => article.tags.includes(tag));
 }
 
+/**
+ * Retrieves all glossary terms from the content directory.
+ * Results are cached after the first call for performance.
+ * Terms are sorted alphabetically using Afrikaans locale.
+ * 
+ * @returns Array of all GlossaryTerm objects sorted alphabetically
+ */
 export function getAllTerms(): GlossaryTerm[] {
   if (termsCache) return termsCache;
 
@@ -99,10 +146,22 @@ export function getAllTerms(): GlossaryTerm[] {
   return terms;
 }
 
+/**
+ * Finds and returns a specific glossary term by its slug identifier.
+ * 
+ * @param slug - The unique slug identifier for the glossary term
+ * @returns The GlossaryTerm object if found, undefined otherwise
+ */
 export function getTermBySlug(slug: string): GlossaryTerm | undefined {
   return getAllTerms().find((term) => term.slug === slug);
 }
 
+/**
+ * Retrieves all unique tags used across all articles.
+ * Tags are sorted alphabetically using Afrikaans locale.
+ * 
+ * @returns Array of unique tag strings sorted alphabetically
+ */
 export function getAllTags(): string[] {
   const tagSet = new Set<string>();
 
@@ -113,6 +172,15 @@ export function getAllTags(): string[] {
   return Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'af'));
 }
 
+/**
+ * Finds articles related to the given article based on category and shared tags.
+ * Articles are scored by relevance: same category adds 2 points, each shared tag adds 1 point.
+ * Returns the highest scoring articles up to the specified limit.
+ * 
+ * @param article - The article to find related articles for
+ * @param limit - Maximum number of related articles to return (default: 3)
+ * @returns Array of related Article objects sorted by relevance score
+ */
 export function getRelatedArticles(article: Article, limit = 3): Article[] {
   const allArticles = getAllArticles();
 
@@ -132,13 +200,28 @@ export function getRelatedArticles(article: Article, limit = 3): Article[] {
   return scored.slice(0, limit).map((item) => item.article);
 }
 
+/**
+ * Retrieves all related terms for a given glossary term.
+ * Uses the term's 'related' field which contains slugs of related terms.
+ * 
+ * @param term - The glossary term to find related terms for
+ * @returns Array of related GlossaryTerm objects
+ */
 export function getRelatedTerms(term: GlossaryTerm): GlossaryTerm[] {
   return term.related
     .map((slug) => getTermBySlug(slug))
     .filter((t): t is GlossaryTerm => t !== undefined);
 }
 
-// Search functionality
+/**
+ * Searches through all articles and glossary terms for matches to the query string.
+ * Searches in titles, descriptions, content, and tags for articles.
+ * Searches in terms, short definitions, and content for glossary terms.
+ * Results are sorted with title matches first, then terms before articles.
+ * 
+ * @param query - The search query string
+ * @returns Array of SearchResult objects matching the query, sorted by relevance
+ */
 export function search(query: string): SearchResult[] {
   if (!query.trim()) return [];
 
@@ -193,11 +276,24 @@ export function search(query: string): SearchResult[] {
   return results;
 }
 
-// Featured content for homepage
+/**
+ * Retrieves the most recent articles to feature on the homepage.
+ * Returns the newest articles based on date, up to the specified limit.
+ * 
+ * @param limit - Maximum number of articles to return (default: 3)
+ * @returns Array of the most recent Article objects
+ */
 export function getFeaturedArticles(limit = 3): Article[] {
   return getAllArticles().slice(0, limit);
 }
 
+/**
+ * Retrieves a curated selection of popular glossary terms to feature on the homepage.
+ * Returns commonly referenced AI terms that are useful for beginners.
+ * 
+ * @param limit - Maximum number of terms to return (default: 6)
+ * @returns Array of curated GlossaryTerm objects
+ */
 export function getFeaturedTerms(limit = 6): GlossaryTerm[] {
   // Return a mix of popular terms
   const popularSlugs = [

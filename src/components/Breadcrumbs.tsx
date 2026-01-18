@@ -10,6 +10,12 @@ interface BreadcrumbsProps {
   items: BreadcrumbItem[];
 }
 
+/**
+ * Renders a horizontal breadcrumb navigation starting with a Home link.
+ *
+ * @param items - Array of breadcrumb entries; each entry has `label` and an optional `to` path. Entries with `to` render as links, entries without `to` render as bold text.
+ * @returns A navigation element containing the breadcrumb trail.
+ */
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   return (
     <nav aria-label="Broodkrummels" className="mb-6">

@@ -6,6 +6,16 @@ import { ArticleCard } from '../components/ArticleCard';
 import { getArticleBySlug, getRelatedArticles } from '../lib/content';
 import { CATEGORIES } from '../types/content';
 
+/**
+ * Render the article detail page for the article identified by the current route slug.
+ *
+ * Renders SEO metadata, breadcrumbs, category badge, title, description, formatted publish date,
+ * optional reading time, article HTML content, tag list, and a related-articles section. If no
+ * article matches the route slug, renders a localized "article not found" message with a link
+ * back to the articles list.
+ *
+ * @returns A React element containing the article detail view for the current slug, or a localized not-found message when no article is found.
+ */
 export function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const article = slug ? getArticleBySlug(slug) : undefined;

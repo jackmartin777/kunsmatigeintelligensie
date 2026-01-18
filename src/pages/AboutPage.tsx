@@ -2,6 +2,16 @@ import { SEO } from '../components/SEO';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Brain, Heart, Users, BookOpen } from 'lucide-react';
 
+/**
+ * Renders the About page for the site, including SEO metadata, breadcrumbs, the mission,
+ * values, and a call-to-action for contributors.
+ *
+ * The component outputs structured content in Afrikaans: a header, a "Ons missie" section,
+ * a 2x2 values grid (Duidelikheid, Menslikheid, Toeganklikheid, Eerlikheid), and a
+ * "Word betrokke" contact section with a mailto link.
+ *
+ * @returns A React element representing the About page.
+ */
 export function AboutPage() {
   return (
     <>

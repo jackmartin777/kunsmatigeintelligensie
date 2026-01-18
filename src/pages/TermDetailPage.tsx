@@ -5,6 +5,15 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { TermCard } from '../components/TermCard';
 import { getTermBySlug, getRelatedTerms } from '../lib/content';
 
+/**
+ * Render the term detail page for the current URL slug.
+ *
+ * If a matching term exists, displays SEO metadata, breadcrumbs, the term title,
+ * short definition, HTML content, optional tags, related terms, and a back link.
+ * If no term is found, displays a centered Afrikaans not-found message with a back link to the dictionary.
+ *
+ * @returns The React element for the term detail view or the not-found message.
+ */
 export function TermDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const term = slug ? getTermBySlug(slug) : undefined;

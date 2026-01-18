@@ -6,6 +6,14 @@ import { ArticleCard } from '../components/ArticleCard';
 import { TermCard } from '../components/TermCard';
 import { getFeaturedArticles, getFeaturedTerms } from '../lib/content';
 
+/**
+ * Render the site's homepage including hero, search, featured articles, popular terms, and category overview.
+ *
+ * Renders the canonical SEO tag, a hero section with CTAs and a search box, a latest-articles grid (3 featured articles),
+ * a popular-terms grid (6 featured terms), and a categories overview with links to topic pages.
+ *
+ * @returns The React element for the homepage layout.
+ */
 export function HomePage() {
   const featuredArticles = getFeaturedArticles(3);
   const featuredTerms = getFeaturedTerms(6);

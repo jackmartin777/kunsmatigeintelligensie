@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * Hook that reports whether the user prefers reduced motion.
+ *
+ * Subscribes to the `(prefers-reduced-motion: reduce)` media feature and updates when the user's preference changes.
+ *
+ * @returns `true` if the user agent currently prefers reduced motion, `false` otherwise.
+ */
 export function useReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 

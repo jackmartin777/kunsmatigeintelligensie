@@ -2,6 +2,14 @@ import { Link } from 'react-router-dom';
 import { Home, Search, ArrowLeft } from 'lucide-react';
 import { SEO } from '../components/SEO';
 
+/**
+ * Render a localized 404 Not Found page with metadata and user navigation.
+ *
+ * Renders page metadata (title and description), a prominent "404" message, guidance text,
+ * links to the home page and articles search, and a back navigation button.
+ *
+ * @returns A React element representing the 404 not-found page with SEO metadata and navigation controls.
+ */
 export function NotFoundPage() {
   return (
     <>

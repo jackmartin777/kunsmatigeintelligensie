@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 
+/**
+ * Renders the site footer with brand, quick links, categories, and a bottom bar (content in Afrikaans).
+ *
+ * The footer is responsive: a multi-column grid on medium+ screens that stacks on small screens, includes a brand area with icon and description, navigational links, category links, and a bottom bar displaying the current year and a short credit line.
+ *
+ * @returns The footer JSX element containing the complete site footer.
+ */
 export function Footer() {
   return (
     <footer className="bg-surface-900 text-surface-300">

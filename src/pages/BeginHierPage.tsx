@@ -59,6 +59,13 @@ const steps = [
   },
 ];
 
+/**
+ * Render the "Begin hier" page that presents a step-by-step beginner's guide to artificial intelligence in Afrikaans.
+ *
+ * The page includes SEO metadata, breadcrumbs, a list of guided steps with links, and a "Vinnige wenke" section of quick tips.
+ *
+ * @returns A JSX element representing the complete "Begin hier" page.
+ */
 export function BeginHierPage() {
   return (
     <>

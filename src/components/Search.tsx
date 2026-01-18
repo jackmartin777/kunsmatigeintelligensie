@@ -9,6 +9,13 @@ interface SearchProps {
   autoFocus?: boolean;
 }
 
+/**
+ * Render a searchable input with an interactive, keyboard-accessible results dropdown.
+ *
+ * @param onClose - Optional callback invoked when the dropdown is closed or a result is selected
+ * @param autoFocus - If true, focuses the input element after the component mounts
+ * @returns The search input UI including a clear control, a results list with keyboard navigation, and a no-results message when applicable
+ */
 export function Search({ onClose, autoFocus = false }: SearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);

@@ -24,6 +24,16 @@ const navItems = [
   { to: '/oor-ons', label: 'Oor ons' },
 ];
 
+/**
+ * Responsive top navigation bar with a brand link, desktop navigation links, and a toggleable mobile menu.
+ *
+ * The component renders a sticky header containing a logo that links to the root path, a set of navigation
+ * items displayed horizontally on large screens, and a collapsible vertical menu for small screens. The mobile
+ * toggle button updates internal state to open/close the menu; selecting a mobile item closes the menu. Active
+ * routes receive distinct styling.
+ *
+ * @returns A header element containing the application's navigation UI.
+ */
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 

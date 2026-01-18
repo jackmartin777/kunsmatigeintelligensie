@@ -4,6 +4,10 @@ import matter from 'gray-matter';
 
 const BASE_URL = 'https://kunsmatigeintelligensie.co.za';
 
+/**
+ * Collects slugs for all Markdown articles in the content/articles directory.
+ * @returns {string[]} An array of article slugs — each taken from the file's front matter `slug` when present, or from the filename without the `.md` extension.
+ */
 function getArticleSlugs() {
   const articlesDir = join(process.cwd(), 'content/articles');
   const files = readdirSync(articlesDir).filter((f) => f.endsWith('.md'));
@@ -15,6 +19,12 @@ function getArticleSlugs() {
   });
 }
 
+/**
+ * Collects slugs for glossary terms by reading Markdown files in content/glossary.
+ *
+ * For each `.md` file, uses the front-matter `slug` if present; otherwise uses the filename without the `.md` extension.
+ * @returns {string[]} Array of glossary term slugs.
+ */
 function getTermSlugs() {
   const glossaryDir = join(process.cwd(), 'content/glossary');
   const files = readdirSync(glossaryDir).filter((f) => f.endsWith('.md'));
@@ -26,6 +36,11 @@ function getTermSlugs() {
   });
 }
 
+/**
+ * Generate the site's sitemap including static pages, article pages, and glossary term pages.
+ *
+ * Builds an XML sitemap, writes it to public/sitemap.xml, and logs the number of URLs written.
+ */
 function generateSitemap() {
   const articleSlugs = getArticleSlugs();
   const termSlugs = getTermSlugs();

@@ -11,6 +11,15 @@ import { CategoryPage } from './pages/CategoryPage';
 import { AboutPage } from './pages/AboutPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
+/**
+ * Top-level application component that provides document head context and client-side routing.
+ *
+ * Configures BrowserRouter with a Layout wrapper and routes for home, getting-started, articles
+ * (including article detail by `:slug`), glossary (including term detail by `:slug`),
+ * category pages (by `:slug`), an about page, and a catch-all not-found page.
+ *
+ * @returns The root JSX element containing HelmetProvider and the application's router configuration.
+ */
 function App() {
   return (
     <HelmetProvider>

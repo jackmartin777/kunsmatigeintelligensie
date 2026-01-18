@@ -4,7 +4,6 @@ interface SEOProps {
   title?: string;
   description?: string;
   canonical?: string;
-  image?: string;
   type?: 'website' | 'article';
   article?: {
     publishedTime?: string;
@@ -18,23 +17,28 @@ const BASE_URL = 'https://kunsmatigeintelligensie.co.za';
 const DEFAULT_TITLE = 'Kunsmatige Intelligensie - Die tuiste van KI in Afrikaans';
 const DEFAULT_DESCRIPTION =
   'Die bron van alles KI in Afrikaans. Leer oor kunsmatige intelligensie, van basiese konsepte tot praktiese toepassings.';
-const DEFAULT_IMAGE = `${BASE_URL}/og-image.png`;
 
+/**
+ * Sets SEO-related head tags (standard meta, Open Graph, Twitter) and optional JSON-LD for a page.
+ *
+ * @param title - Page title; when provided it is suffixed with " | Kunsmatige Intelligensie".
+ * @param description - Meta description used for search engines and social previews.
+ * @param canonical - Path appended to the site base URL to form the canonical URL; when omitted the site base URL is used.
+ * @param type - Open Graph type, either `website` or `article`.
+ * @param article - Article metadata containing optional `publishedTime`, `modifiedTime` (ISO 8601 strings), and `tags` to emit article-specific meta tags.
+ * @param jsonLd - Structured data object to embed as `application/ld+json`.
+ * @returns A React element that injects SEO and social-sharing meta tags into the document head.
+ */
 export function SEO({
   title,
   description = DEFAULT_DESCRIPTION,
   canonical,
-  image,
   type = 'website',
   article,
   jsonLd,
 }: SEOProps) {
   const pageTitle = title ? `${title} | Kunsmatige Intelligensie` : DEFAULT_TITLE;
   const canonicalUrl = canonical ? `${BASE_URL}${canonical}` : BASE_URL;
-  const imageUrl = image ? `${BASE_URL}${image}` : DEFAULT_IMAGE;
-
-  // Deduplicate tags to prevent duplicate React keys
-  const uniqueTags = article?.tags ? Array.from(new Set(article.tags)) : [];
 
   return (
     <Helmet>
@@ -51,7 +55,6 @@ export function SEO({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:locale" content="af_ZA" />
       <meta property="og:site_name" content="Kunsmatige Intelligensie" />
-      <meta property="og:image" content={imageUrl} />
 
       {/* Article specific */}
       {article?.publishedTime && (
@@ -60,15 +63,14 @@ export function SEO({
       {article?.modifiedTime && (
         <meta property="article:modified_time" content={article.modifiedTime} />
       )}
-      {uniqueTags.map((tag, index) => (
-        <meta key={`article-tag-${index}`} property="article:tag" content={tag} />
+      {article?.tags?.map((tag) => (
+        <meta key={tag} property="article:tag" content={tag} />
       ))}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={imageUrl} />
 
       {/* JSON-LD */}
       {jsonLd && (

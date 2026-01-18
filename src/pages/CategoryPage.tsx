@@ -5,6 +5,15 @@ import { ArticleCard } from '../components/ArticleCard';
 import { getArticlesByCategory } from '../lib/content';
 import { CATEGORIES } from '../types/content';
 
+/**
+ * Renders the category page for the current route slug.
+ *
+ * Displays a 404-style message in Afrikaans when the slug does not resolve to a category.
+ * When a category exists, provides SEO metadata, breadcrumbs, a header with the category title
+ * and description, and either a grid of article cards with a localized count or an empty-state message.
+ *
+ * @returns A JSX element representing the category page or a not-found message when the category is invalid.
+ */
 export function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
   const category = slug ? CATEGORIES[slug] : undefined;

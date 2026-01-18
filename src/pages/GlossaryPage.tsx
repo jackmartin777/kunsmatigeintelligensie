@@ -4,6 +4,19 @@ import { TermCard } from '../components/TermCard';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { getAllTerms } from '../lib/content';
 
+/**
+ * Render the Afrikaans KI (AI) glossary page with a searchable, alphabetically grouped list of terms.
+ *
+ * The component loads all terms, filters them by the controlled search query (matching term or shortDefinition,
+ * case-insensitive), groups the filtered results by the first uppercase letter of each term, and renders:
+ * - SEO metadata and breadcrumbs,
+ * - a search input that updates the results,
+ * - a letter navigation bar linking to letter sections,
+ * - a count of matching terms,
+ * - grouped term sections with TermCard entries, or an empty-state message with a reset button when no matches are found.
+ *
+ * @returns The page JSX for the Afrikaans KI glossary.
+ */
 export function GlossaryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const allTerms = getAllTerms();
@@ -24,8 +37,7 @@ export function GlossaryPage() {
     const groups: Record<string, typeof filteredTerms> = {};
 
     filteredTerms.forEach((term) => {
-      // Safely handle empty or undefined term names
-      const firstLetter = (term.term?.[0] ?? '#').toUpperCase();
+      const firstLetter = term.term[0].toUpperCase();
       if (!groups[firstLetter]) {
         groups[firstLetter] = [];
       }

@@ -8,6 +8,16 @@ interface ArticleCardProps {
   featured?: boolean;
 }
 
+/**
+ * Render an article card in either a featured (prominent) or compact layout.
+ *
+ * Displays the article's category badge, formatted publication date, title, description,
+ * and optional reading time; links navigate to category and article routes.
+ *
+ * @param article - The article to display. Uses `category`, `date`, `slug`, `title`, `description`, and optional `readingTime`.
+ * @param featured - When `true`, renders the larger featured layout; otherwise renders the compact layout.
+ * @returns A JSX element representing the article card.
+ */
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
   const category = CATEGORIES[article.category];
 

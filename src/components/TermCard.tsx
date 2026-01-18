@@ -7,6 +7,13 @@ interface TermCardProps {
   compact?: boolean;
 }
 
+/**
+ * Render a glossary term card in either a compact link-style layout or a full article layout.
+ *
+ * @param term - The glossary term to display (title, slug, shortDefinition, tags).
+ * @param compact - When `true`, render a compact link card showing the term and short definition; when `false`, render the full card with tags and a "Leer meer" link.
+ * @returns A React element representing the term card in the selected layout.
+ */
 export function TermCard({ term, compact = false }: TermCardProps) {
   if (compact) {
     return (

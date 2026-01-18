@@ -6,6 +6,15 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { getAllArticles, getAllTags } from '../lib/content';
 import { CATEGORIES } from '../types/content';
 
+/**
+ * Render a searchable, filterable page that lists all articles with category and tag controls.
+ *
+ * The page displays SEO metadata, breadcrumbs, a header, a search input, category and tag filter buttons,
+ * a clear-filters control when any filter is active, a results count, and either a responsive grid of
+ * ArticleCard items or an empty state with an option to clear filters.
+ *
+ * @returns A React element containing the complete articles page UI with filtering and search functionality.
+ */
 export function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);

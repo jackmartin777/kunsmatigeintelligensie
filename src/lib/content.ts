@@ -207,6 +207,10 @@ export function getFeaturedTerms(limit = 6): GlossaryTerm[] {
     'agent',
     'masjienleer',
     'tokens',
+    'diep-leer',
+    'transformer',
+    'bias',
+    'temperatuur',
   ];
 
   const terms = getAllTerms();

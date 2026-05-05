@@ -1,10 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Rustige, professionele kleurpalet
         primary: {
           50: '#f0f7ff',
           100: '#e0efff',
@@ -17,6 +17,19 @@ export default {
           800: '#054786',
           900: '#0a3c6f',
           950: '#07264a',
+        },
+        purple: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+          700: '#7e22ce',
+          800: '#6b21a8',
+          900: '#581c87',
+          950: '#3b0764',
         },
         surface: {
           50: '#f8fafc',
@@ -42,22 +55,12 @@ export default {
             color: '#334155',
             a: {
               color: '#0c85eb',
-              '&:hover': {
-                color: '#0068c9',
-              },
+              '&:hover': { color: '#0068c9' },
             },
-            h1: {
-              color: '#0f172a',
-            },
-            h2: {
-              color: '#1e293b',
-            },
-            h3: {
-              color: '#334155',
-            },
-            strong: {
-              color: '#1e293b',
-            },
+            h1: { color: '#0f172a' },
+            h2: { color: '#1e293b' },
+            h3: { color: '#334155' },
+            strong: { color: '#1e293b' },
             code: {
               color: '#0052a3',
               backgroundColor: '#f1f5f9',
@@ -65,19 +68,24 @@ export default {
               borderRadius: '0.25rem',
               fontWeight: '500',
             },
-            'code::before': {
-              content: '""',
-            },
-            'code::after': {
-              content: '""',
-            },
+            'code::before': { content: '""' },
+            'code::after': { content: '""' },
           },
         },
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.5s ease-out',
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'slide-up': 'slideUp 0.6s ease-out forwards',
+        'slide-in-right': 'slideInRight 0.6s ease-out forwards',
+        'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
+        'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+        'marquee': 'marquee 40s linear infinite',
+        'marquee-slow': 'marquee 60s linear infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'shimmer': 'shimmer 2.5s linear infinite',
+        'bounce-slow': 'bounce 2s ease-in-out infinite',
+        'spin-slow': 'spin 8s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -85,9 +93,41 @@ export default {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(30px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-12px)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(168,85,247,0.4), 0 0 40px rgba(168,85,247,0.1)' },
+          '50%': { boxShadow: '0 0 30px rgba(168,85,247,0.7), 0 0 60px rgba(168,85,247,0.3)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-gradient': 'linear-gradient(135deg, #0f172a 0%, #1e1040 40%, #0f172a 100%)',
+        'purple-blue': 'linear-gradient(135deg, #7e22ce 0%, #0068c9 100%)',
+        'shimmer-gradient': 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+      },
+      boxShadow: {
+        'glow-purple': '0 0 30px rgba(168,85,247,0.4)',
+        'glow-blue': '0 0 30px rgba(12,133,235,0.4)',
+        'glow-purple-lg': '0 0 60px rgba(168,85,247,0.3)',
+        'card-hover': '0 20px 40px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.08)',
       },
     },
   },

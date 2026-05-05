@@ -38,10 +38,10 @@ export function ArticlesPage() {
         <Breadcrumbs items={[{ label: 'Artikels' }]} />
 
         <header className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-surface-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-surface-900 dark:text-white mb-4">
             Alle artikels
           </h1>
-          <p className="text-lg text-surface-600 max-w-2xl">
+          <p className="text-lg text-surface-600 dark:text-surface-400 max-w-2xl">
             Verken ons volledige versameling artikels oor kunsmatige intelligensie.
           </p>
         </header>
@@ -53,20 +53,19 @@ export function ArticlesPage() {
 
         {/* Filters */}
         <div className="mb-8 space-y-4">
-          {/* Category filters */}
           <div>
-            <h2 className="text-sm font-medium text-surface-700 mb-2">Kategorieë</h2>
+            <h2 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+              Kategorieë
+            </h2>
             <div className="flex flex-wrap gap-2">
               {Object.entries(CATEGORIES).map(([key, category]) => (
                 <button
                   key={key}
-                  onClick={() =>
-                    setSelectedCategory(selectedCategory === key ? null : key)
-                  }
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  onClick={() => setSelectedCategory(selectedCategory === key ? null : key)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                     selectedCategory === key
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-surface-100 text-surface-700 hover:bg-surface-200'
+                      ? 'bg-gradient-to-r from-purple-600 to-primary-600 text-white shadow-glow-purple'
+                      : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700'
                   }`}
                 >
                   {category.title}
@@ -75,18 +74,19 @@ export function ArticlesPage() {
             </div>
           </div>
 
-          {/* Tag filters */}
           <div>
-            <h2 className="text-sm font-medium text-surface-700 mb-2">Etikette</h2>
+            <h2 className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+              Etikette
+            </h2>
             <div className="flex flex-wrap gap-2">
               {allTags.map((tag) => (
                 <button
                   key={tag}
                   onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                     selectedTag === tag
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-surface-100 text-surface-700 hover:bg-surface-200'
+                      ? 'bg-gradient-to-r from-purple-600 to-primary-600 text-white'
+                      : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-300 hover:bg-surface-200 dark:hover:bg-surface-700'
                   }`}
                 >
                   {tag}
@@ -95,24 +95,20 @@ export function ArticlesPage() {
             </div>
           </div>
 
-          {/* Clear filters */}
           {(selectedCategory || selectedTag) && (
             <button
               onClick={clearFilters}
-              className="text-sm text-primary-600 hover:text-primary-700"
+              className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
             >
               Verwyder alle filters
             </button>
           )}
         </div>
 
-        {/* Results count */}
-        <p className="text-sm text-surface-500 mb-6">
-          {filteredArticles.length} artikel{filteredArticles.length !== 1 && 's'}{' '}
-          gevind
+        <p className="text-sm text-surface-500 dark:text-surface-500 mb-6">
+          {filteredArticles.length} artikel{filteredArticles.length !== 1 && 's'} gevind
         </p>
 
-        {/* Articles grid */}
         {filteredArticles.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredArticles.map((article) => (
@@ -120,13 +116,13 @@ export function ArticlesPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-surface-50 rounded-xl">
-            <p className="text-surface-600">
+          <div className="text-center py-12 bg-surface-50 dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700">
+            <p className="text-surface-600 dark:text-surface-400">
               Geen artikels gevind met hierdie filters nie.
             </p>
             <button
               onClick={clearFilters}
-              className="mt-4 text-primary-600 hover:text-primary-700 font-medium"
+              className="mt-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 font-medium"
             >
               Verwyder filters
             </button>

@@ -7,9 +7,10 @@ import type { SearchResult } from '../types/content';
 interface SearchProps {
   onClose?: () => void;
   autoFocus?: boolean;
+  dark?: boolean;
 }
 
-export function Search({ onClose, autoFocus = false }: SearchProps) {
+export function Search({ onClose, autoFocus = false, dark = false }: SearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +49,6 @@ export function Search({ onClose, autoFocus = false }: SearchProps) {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen || results.length === 0) return;
-
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -70,10 +70,16 @@ export function Search({ onClose, autoFocus = false }: SearchProps) {
     }
   };
 
+  const inputClass = dark
+    ? 'w-full pl-11 pr-10 py-3.5 rounded-xl border border-white/20 glass text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400/60 focus:border-transparent transition-all'
+    : 'w-full pl-11 pr-10 py-3 rounded-xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 text-surface-900 dark:text-surface-100 placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all';
+
+  const iconClass = dark ? 'text-white/60' : 'text-surface-400 dark:text-surface-500';
+
   return (
     <div className="relative w-full max-w-xl">
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-surface-400" />
+        <SearchIcon className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 ${iconClass}`} />
         <input
           ref={inputRef}
           type="text"
@@ -81,15 +87,12 @@ export function Search({ onClose, autoFocus = false }: SearchProps) {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Soek artikels en terme..."
-          className="w-full pl-10 pr-10 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+          className={inputClass}
         />
         {query && (
           <button
-            onClick={() => {
-              setQuery('');
-              setIsOpen(false);
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-surface-400 hover:text-surface-600 hover:bg-surface-100"
+            onClick={() => { setQuery(''); setIsOpen(false); }}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full ${dark ? 'text-white/60 hover:text-white hover:bg-white/10' : 'text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700'}`}
           >
             <X className="h-4 w-4" />
           </button>
@@ -98,31 +101,33 @@ export function Search({ onClose, autoFocus = false }: SearchProps) {
 
       {/* Results dropdown */}
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-surface-200 overflow-hidden z-50">
-          <ul className="divide-y divide-surface-100">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-surface-800 rounded-xl shadow-lg border border-surface-200 dark:border-surface-700 overflow-hidden z-50">
+          <ul className="divide-y divide-surface-100 dark:divide-surface-700">
             {results.map((result, index) => (
               <li key={`${result.type}-${result.slug}`}>
                 <button
                   onClick={() => handleSelect(result)}
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`w-full px-4 py-3 flex items-start gap-3 text-left transition-colors ${
-                    index === selectedIndex ? 'bg-primary-50' : 'hover:bg-surface-50'
+                    index === selectedIndex
+                      ? 'bg-purple-50 dark:bg-purple-950/50'
+                      : 'hover:bg-surface-50 dark:hover:bg-surface-700'
                   }`}
                 >
                   {result.type === 'article' ? (
-                    <FileText className="h-5 w-5 text-primary-500 flex-shrink-0 mt-0.5" />
+                    <FileText className="h-5 w-5 text-primary-500 dark:text-primary-400 flex-shrink-0 mt-0.5" />
                   ) : (
-                    <BookOpen className="h-5 w-5 text-primary-500 flex-shrink-0 mt-0.5" />
+                    <BookOpen className="h-5 w-5 text-purple-500 dark:text-purple-400 flex-shrink-0 mt-0.5" />
                   )}
                   <div className="min-w-0">
-                    <p className="font-medium text-surface-900 truncate">
+                    <p className="font-medium text-surface-900 dark:text-surface-100 truncate">
                       {result.title}
                     </p>
-                    <p className="text-sm text-surface-500 truncate">
+                    <p className="text-sm text-surface-500 dark:text-surface-400 truncate">
                       {result.description}
                     </p>
                   </div>
-                  <span className="ml-auto text-xs text-surface-400 flex-shrink-0">
+                  <span className="ml-auto text-xs text-surface-400 dark:text-surface-500 flex-shrink-0">
                     {result.type === 'article' ? 'Artikel' : 'Term'}
                   </span>
                 </button>
@@ -132,9 +137,8 @@ export function Search({ onClose, autoFocus = false }: SearchProps) {
         </div>
       )}
 
-      {/* No results message */}
       {isOpen && query.length >= 2 && results.length === 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-surface-200 p-4 text-center text-surface-500">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-surface-800 rounded-xl shadow-lg border border-surface-200 dark:border-surface-700 p-4 text-center text-surface-500 dark:text-surface-400">
           Geen resultate gevind vir "{query}"
         </div>
       )}
